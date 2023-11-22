@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 
-const mongoUri =
-  "mongodb+srv://akshayb03:Bangarangatlas%4003@ecomm-prod-cluster.pgcqazn.mongodb.net/Ecomm_Products?retryWrites=true&w=majority";
+const mongoURI = process.env.MONGO_URI;
 
-mongoose.connect(mongoUri);
+mongoose.connect(mongoURI);
 
 mongoose.connection.on("error", () => {
   console.log("Error in connection");

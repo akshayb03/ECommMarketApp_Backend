@@ -3,7 +3,8 @@ const router = express.Router();
 const User = require("./models/User");
 require("./db");
 const jwt = require("jsonwebtoken");
-const jwtSecret = require("./constants");
+require("dotenv").config();
+const jwtSecret = process.env.JWT_SECRET;
 const bcrypt = require("bcrypt");
 
 router.post("/signup", async (req, res) => {
@@ -27,7 +28,7 @@ router.post("/signup", async (req, res) => {
     });
 
     user.save();
-    const token = jwt.sign({ _id: user._id }, jwtSecret.jwtSecret);
+    const token = jwt.sign({ _id: user._id }, jwtSecret);
     return res.status(200).send({ token: token });
   } catch (error) {
     return res.status(500).send("Some error has occured. Please try again");
@@ -49,7 +50,7 @@ router.post("/signin", async (req, res, next) => {
     const compare = await bcrypt.compare(password, user.password);
     console.log("compare", compare);
     if (compare) {
-      const token = jwt.sign({ _id: user._id }, jwtSecret.jwtSecret);
+      const token = jwt.sign({ _id: user._id }, jwtSecret);
       return res.status(200).send({ token: token, name: user.name });
     } else {
       return res.status(401).send("Password is incorrect");
@@ -63,4 +64,4 @@ router.get("/home", (req, res) => {
   return res.send("This is the home page");
 });
 
-module.exports = { router, jwtSecret };
+module.exports = { router };
